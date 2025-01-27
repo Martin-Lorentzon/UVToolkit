@@ -5,6 +5,7 @@ from collections import deque, defaultdict
 
 import bpy
 import bmesh
+from bpy_extras import bmesh_utils
 
 
 AXIS_U = 0
@@ -410,6 +411,12 @@ def get_objects_seams(context):
     scene.tool_settings.uv_select_mode = current_uv_select_mode
 
     return objects_seams
+
+
+def get_islands_simple(bm: bmesh.types.BMesh):
+    uv_layer = bm.loops.layers.uv.verify()
+    uv_islands = bmesh_utils.bmesh_linked_uv_islands(bm, uv_layer)
+    return uv_layer, uv_islands
 
 
 def get_islands(uv, bm, seams, has_selected_faces=False, islands_with_hidden_faces=True):
